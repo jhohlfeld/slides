@@ -1,0 +1,23 @@
+{
+  "name": "slides",
+  "version": "0.0.1",
+  "description": "slides is a simple javascript program that reads a structured html document and displays the single sections of this document page-wise in a form of a slide-show",
+  "main": "main.js",
+  "scripts": {
+    "test": "qunit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://git.netronaut.de/"
+  },
+  "author": "Jakob Hohlfels",
+  "license": "BSD",
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-copy": "latest"
+  }
+}

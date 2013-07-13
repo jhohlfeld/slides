@@ -1,0 +1,17 @@
+{
+  "name": "slides",
+  "version": "0.0.1",
+  "main": "main.js",
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "sockjs": "~0.3.4"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
