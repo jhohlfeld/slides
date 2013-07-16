@@ -1,0 +1,16 @@
+{
+  "name": "slides",
+  "version": "0.0.1",
+  "main": "src/main.js",
+  "dependencies": {
+    "requirejs": "~2.1.8"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
