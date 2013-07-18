@@ -12,7 +12,8 @@ files = [
   JASMINE_ADAPTER,
   REQUIRE,
   REQUIRE_ADAPTER,
-  {pattern: 'src/**/*.js', included: false},
+  {pattern: 'bower_components/**/*.js', included: false},
+  {pattern: 'src/**/*', included: false},
   {pattern: 'test/**/*Spec.js', included: false},
   'test/test-main.js',
 ];
@@ -43,7 +44,7 @@ colors = true;
 
 // level of logging
 // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-logLevel = LOG_INFO;
+logLevel = LOG_DEBUG;
 
 
 // enable / disable watching file and executing tests whenever any file changes

@@ -7,11 +7,21 @@ requirejs.config({
     baseUrl: '/base/src',
 
     paths: {
-//        'jquery': '../lib/jquery',
-//        'underscore': '../lib/underscore',
+//    	'jquery': '../bower_components/jquery/jquery.min',
+    	'handlebars': '../bower_components/handlebars/handlebars',
+    	'hbs' : '../bower_components/requirejs-hbs/hbs',
+    	'text' : '../bower_components/requirejs-text/text',
     },
+  // hbs config
+  hbs: {
+    templateExtension: ".html", // Set the extension automatically appended to templates
+                              // ('hbs' by default)
+  },
 
-    shim: {
+  shim: {
+  	'handlebars': {
+  		exports: 'Handlebars'
+  	},
 //        'underscore': {
 //            exports: '_'
 //        }
