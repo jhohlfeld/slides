@@ -5,10 +5,10 @@
   "dependencies": {
     "handlebars": "~1.0.0",
     "jquery": "~2.0.3",
+    "sockjs": "~0.3.4",
     "requirejs": "~2.1.8",
-    "requirejs-hbs": "*",
-    "requirejs-text": "~2.0.7"
-    "sockjs": "~0.3.4"
+    "requirejs-text": "~2.0.7",
+    "requirejs-hbs": "*"
   },
   "ignore": [
     "**/.*",
