@@ -1,0 +1,9 @@
+{
+  "name": "The streamloader API",
+  "description": "The streamloader API: generate a slideshow from any well-structured html document.",
+  "version": "0.0.1",
+  "url": "http://netronaut.de/slides",
+  "options": {
+    "outdir": "../build/apidocs"
+  }
+}
