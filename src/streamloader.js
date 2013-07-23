@@ -61,13 +61,11 @@ define(['jquery'], function($) {
 	 */
 	Loader.prototype.load = function(url, into) {
 		var url = url || this.url;
-		var a = arguments;
+		var into = $(into || 'body');
 		return $.get(url, $.proxy(function(data) {
-			this.html = data;
-			if (a.length == 2) {
-				into.html(this.html);
-			}
+			this.html = $(data).filter(':not(#text)');
 			this.distribute(this.html);
+			this.render(into);
 		}, this));
 	}
 
@@ -79,20 +77,51 @@ define(['jquery'], function($) {
 	 * @param {String} html
 	 */
 	Loader.prototype.distribute = function(html) {
-		var sections = [];
+		this.sections = [];
 		var st = this.options['splitTagName'];
-		$(html).filter(st).each(function(i, el) {
-			var cnt = [el];
-			while (null != (el = el.nextSibling)) {
-				if (el.nodeName == st) {
-					break;
-				}
-				cnt.push(el);
+		var html = $(html).filter(':not(#text)');
+		var sel = html.filter(st);
+		if (!(sel.length > 1)) {
+			this.sections.push(html);
+			return;
+		}
+		var i = $(sel[1]).index();
+		var start = 0;
+		while (i > 0) {
+			this.sections.push(html.slice(start, i));
+			start = i;
+			i = $(sel.filter(':gt(' + i + ')')).index();
+			if (i < 0) {
+				this.sections.push(html.slice(start));
 			}
-			sections.push(cnt);
-		});
-		this.sections = sections;
+		}
 	}
+
+	Loader.prototype.render = function(into) {
+		this.cleanup();
+		this.sections.forEach(function(el) {
+			$('<div class="section">').append(el).appendTo(into);
+		});
+	}
+
+	Loader.prototype.cleanup = function() {
+		$('div.section').remove();
+	}
+
+	/**
+	 * jQuery plugin _outerHtml_
+	 *
+	 * @example
+	 *     $(el).outerHtml()
+	 *
+	 */
+	$.fn.outerHtml = function() {
+		var s = '';
+		this.each(function(el) {
+			s += el.outerHTML;
+		});
+		return s;
+	};
 
 	return {
 		'Loader': Loader
