@@ -1,8 +1,10 @@
+var url = '/base/src/START.html';
+
 define(["app", "streamloader"], function(main, streamloader) {
 
 	// FIRST -basic- group
 	var loader = new streamloader.Loader();
-	loader.load('/base/src/START.html').done(function() {
+	loader.load(url).done(function() {
 		//console.log('done');
 	});
 
@@ -42,7 +44,7 @@ define(["app", "streamloader"], function(main, streamloader) {
 		var loader2 = new streamloader.Loader({
 			splitTagName: 'h2'
 		});
-		loader2.load('/base/src/START.html');
+		loader2.load(url);
 
 		// test config option
 		describe("split tag option", function() {
@@ -95,21 +97,18 @@ define(["app", "streamloader"], function(main, streamloader) {
 		 * The sections
 		 *
 		 */
-		xdescribe("sections", function() {
-
-			it("do expose a function `outerHtml()`", function() {
-				var f = loader2.sections[0].outerHtml;
-				expect(f).toBeDefined();
-				expect(typeof f).toBe('function');
-			});
+		describe("sections", function() {
 
 			it("are singular", function() {
 				expect($(loader2.sections[0]).filter('h2').length).toEqual(1);
 			});
 
 			it("are unique", function() {
-				expect(loader2.sections[0].outerHtml()).
-				not.toEqual(loader2.sections[1].outerHtml());
+				var f = function() {
+					return this.outerHTML;
+				}
+				expect(loader2.sections[0].map(f)).
+				not.toEqual(loader2.sections[1].map(f));
 			});
 		});
 
@@ -117,10 +116,16 @@ define(["app", "streamloader"], function(main, streamloader) {
 		 * The views are created
 		 *
 		 */
-		describe("The slide loader", function() {
+		describe("views", function() {
 
-			it("should be able to generate a number of views.", function() {
-				expect($('div.section')[0]).toBeDefined();
+			beforeEach(function() {
+				loader2.load(url);
+			});
+
+			dump("lalala");
+
+			it("should have been generated.", function() {
+				expect($('div.section').length).toBe(2);
 			});
 		});
 

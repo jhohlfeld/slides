@@ -63,8 +63,7 @@ define(['jquery'], function($) {
 		var url = url || this.url;
 		var into = $(into || 'body');
 		return $.get(url, $.proxy(function(data) {
-			this.html = $(data).filter(':not(#text)');
-			this.distribute(this.html);
+			this.distribute(data);
 			this.render(into);
 		}, this));
 	}
@@ -79,21 +78,19 @@ define(['jquery'], function($) {
 	Loader.prototype.distribute = function(html) {
 		this.sections = [];
 		var st = this.options['splitTagName'];
-		var html = $(html).filter(':not(#text)');
-		var sel = html.filter(st);
+		this.html = $(html).filter(':not(#text)');
+		var sel = this.html.filter(st);
 		if (!(sel.length > 1)) {
-			this.sections.push(html);
+			this.sections.push(this.html);
 			return;
 		}
-		var i = $(sel[1]).index();
+		var i = 0;
 		var start = 0;
-		while (i > 0) {
-			this.sections.push(html.slice(start, i));
-			start = i;
+		while (start > -1) {
 			i = $(sel.filter(':gt(' + i + ')')).index();
-			if (i < 0) {
-				this.sections.push(html.slice(start));
-			}
+			var slice = this.html.slice(start, i != -1 ? i : undefined);
+			this.sections.push(slice);
+			start = i;
 		}
 	}
 
@@ -107,21 +104,6 @@ define(['jquery'], function($) {
 	Loader.prototype.cleanup = function() {
 		$('div.section').remove();
 	}
-
-	/**
-	 * jQuery plugin _outerHtml_
-	 *
-	 * @example
-	 *     $(el).outerHtml()
-	 *
-	 */
-	$.fn.outerHtml = function() {
-		var s = '';
-		this.each(function(el) {
-			s += el.outerHTML;
-		});
-		return s;
-	};
 
 	return {
 		'Loader': Loader
