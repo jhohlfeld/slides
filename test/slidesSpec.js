@@ -1,12 +1,9 @@
 var url = '/base/src/START.html';
 
-define(["app", "streamloader"], function(main, streamloader) {
+define(["streamloader", "text!/base/src/START.html"], function(streamloader, _html) {
 
 	// FIRST -basic- group
 	var loader = new streamloader.Loader();
-	loader.load(url).done(function() {
-		//console.log('done');
-	});
 
 	/**
 	 * Describe the loader
@@ -18,17 +15,13 @@ define(["app", "streamloader"], function(main, streamloader) {
 			expect(typeof loader).toBe('object');
 		})
 
-		it("should be able to load html", function() {
-			expect(loader.html).not.toBe(null);
-		});
-		it("contains some markup", function() {
-			expect(loader.html.filter('h1').length).toBe(1);
+		it("has a method distribute", function() {
+			expect(typeof loader.distribute).toBe("function");
 		});
 
-		it("has several sections", function() {
+		it("has sections", function() {
 			expect(loader.sections).toBeDefined();
 			expect(typeof loader.sections.length).toBe('number');
-			expect(loader.sections.length).toBeGreaterThan(0);
 		});
 
 		it("has a config option to set the split tag", function() {
@@ -44,7 +37,6 @@ define(["app", "streamloader"], function(main, streamloader) {
 		var loader2 = new streamloader.Loader({
 			splitTagName: 'h2'
 		});
-		loader2.load(url);
 
 		// test config option
 		describe("split tag option", function() {
@@ -64,15 +56,18 @@ define(["app", "streamloader"], function(main, streamloader) {
 		 *
 		 */
 		describe("distribute method", function() {
-
+			
+			var st, s1, s2;
+			
 			it("does not split - single delimiter", function() {
-				var st = loader.options.splitTagName;
+				loader.distribute(_html);
+				st = loader.options.splitTagName;
 				expect(loader.html.filter(st).length).toBe(1);
 				expect(loader.sections.length).toBe(1);
 			});
 
-			var st, s1, s2;
 			beforeEach(function() {
+				loader2.distribute(_html);
 				st = loader2.options.splitTagName;
 				s1 = loader2.sections[0];
 				s2 = loader2.sections[1];
@@ -99,6 +94,10 @@ define(["app", "streamloader"], function(main, streamloader) {
 		 */
 		describe("sections", function() {
 
+			beforeEach(function(){
+				loader2.distribute(_html);
+			});
+
 			it("are singular", function() {
 				expect($(loader2.sections[0]).filter('h2').length).toEqual(1);
 			});
@@ -119,10 +118,9 @@ define(["app", "streamloader"], function(main, streamloader) {
 		describe("views", function() {
 
 			beforeEach(function() {
-				loader2.load(url);
+				loader2.distribute(_html);
+				loader2.render($('body'));
 			});
-
-			dump("lalala");
 
 			it("should have been generated.", function() {
 				expect($('div.section').length).toBe(2);
