@@ -48,7 +48,8 @@ define(['jquery'], function($) {
 	 * @default
 	 */
 	Loader.options = {
-		'splitTagName': 'h1'
+		'splitTags': ['h1', 'h2', 'h3'],
+		'joinHead': false,
 	};
 
 	/**
@@ -70,14 +71,14 @@ define(['jquery'], function($) {
 
 	/**
 	 * Distributes the html over sections using
-	 * the predefined 'splitTagName' config option.
+	 * the predefined 'splitTags' config option.
 	 *
 	 * @method distribute
 	 * @param {String} html
 	 */
 	Loader.prototype.distribute = function(html) {
 		this.sections = [];
-		var st = this.options['splitTagName'];
+		var st = this.options['splitTags'].join(',');
 		this.html = $(html).filter(':not(#text)');
 		var sel = this.html.filter(st);
 		if (!(sel.length > 1)) {
@@ -87,7 +88,7 @@ define(['jquery'], function($) {
 		var i = 0;
 		var start = 0;
 		while (start > -1) {
-			i = $(sel.filter(':gt(' + i + ')')).index();
+			i = $(sel.filter(':nth-child(' + (i + 1) + ') ~')).index();
 			var slice = this.html.slice(start, i != -1 ? i : undefined);
 			this.sections.push(slice);
 			start = i;
