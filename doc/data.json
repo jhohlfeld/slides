@@ -1,0 +1,108 @@
+{
+    "project": {
+        "name": "The streamloader API",
+        "description": "The streamloader API: generate a slideshow from any well-structured html document.",
+        "version": "0.0.1",
+        "url": "http://netronaut.de/slides"
+    },
+    "files": {
+        "streamloader.js": {
+            "name": "streamloader.js",
+            "modules": {
+                "streamloader": 1
+            },
+            "classes": {
+                "streamloader.Loader": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "streamloader": {
+            "name": "streamloader",
+            "submodules": {},
+            "classes": {
+                "streamloader.Loader": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "main",
+            "file": "streamloader.js",
+            "line": 27,
+            "description": "The streamloader object takes care of loading an html\ninto a stream (string object) and at the same time\ndistributes this stream as a number of sections.\n\nThe streamloader object returns a pormise\nwith an html string loaded via ajax.\n\nUse it's load() method to get started.",
+            "example": [
+                "\n    loader = new Loader();\n    loader.load('http://so.me/html/')\n\nThe `loader.html` will contain the raw html\nstream, `loader.sections` the distributed node\nelements as array of arrays (of elements)."
+            ],
+            "itemtype": "main"
+        }
+    },
+    "classes": {
+        "streamloader.Loader": {
+            "name": "streamloader.Loader",
+            "shortname": "streamloader.Loader",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "streamloader",
+            "namespace": "",
+            "file": "streamloader.js",
+            "line": 27,
+            "description": "The Loader object.",
+            "is_constructor": 1
+        }
+    },
+    "classitems": [
+        {
+            "file": "streamloader.js",
+            "line": 43,
+            "description": "Default options for {Loader}.",
+            "itemtype": "property",
+            "name": "options",
+            "type": "{Object}",
+            "default": "",
+            "class": "streamloader.Loader",
+            "module": "streamloader"
+        },
+        {
+            "file": "streamloader.js",
+            "line": 54,
+            "description": "Load html from an url.\nOptionally loads the dom into some element.",
+            "itemtype": "method",
+            "name": "load",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "into",
+                    "description": "(optional)",
+                    "type": "HTTPElement"
+                }
+            ],
+            "class": "streamloader.Loader",
+            "module": "streamloader"
+        },
+        {
+            "file": "streamloader.js",
+            "line": 71,
+            "description": "Distributes the html over sections using\nthe predefined 'splitTagName' config option.",
+            "itemtype": "method",
+            "name": "distribute",
+            "params": [
+                {
+                    "name": "html",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "streamloader.Loader",
+            "module": "streamloader"
+        }
+    ],
+    "warnings": []
+}
