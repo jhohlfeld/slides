@@ -16,7 +16,7 @@ define(["hbs!tpl/viewer", "streamloader", "jquery"], function(_viewer, streamloa
 		var into = $(this.options['container']);
 		var prom = this.loader.load(url, into);
 		prom.done($.proxy(function() {
-			$(this.loader.sections).hide().first().show();
+			into.children().hide().first().show();
 			into.appendTo(this.options['attachTo']);
 		}, this));
 		return prom;

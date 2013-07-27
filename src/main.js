@@ -21,8 +21,11 @@ requirejs.config({
   },
 });
 
-require(['jquery', 'app'], function($, view) {
+require(['jquery', 'app'], function($, app) {
 
-  $('body').append(view);
+  var slides = new app.Slides();
+  slides.loadSlide("START.html").done(function() {
+
+  });
 
 });
