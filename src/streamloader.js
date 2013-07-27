@@ -1,5 +1,4 @@
 //streamloader.js
-
 /**
  * The streamloader object takes care of loading an html
  * into a stream (string object) and at the same time
@@ -31,26 +30,24 @@ define(['jquery'], function($) {
 	 * @constructor
 	 */
 	var Loader = function(options) {
-		var options = options || {};
-		this.options = $.extend(
-			$.extend({}, Loader.options),
-			options
-		);
-		this.html = null;
-		this.sections = [];
-	}
+			var options = options || {};
+			this.options = $.extend(
+			$.extend({}, Loader.options), options);
+			this.html = null;
+			this.sections = [];
+		}
 
-	/**
-	 * Default options for {Loader}.
-	 *
-	 * @property options
-	 * @type {Object}
-	 * @default
-	 */
-	Loader.options = {
-		'splitTags': ['h1', 'h2', 'h3'],
-		'joinHead': false,
-	};
+		/**
+		 * Default options for {Loader}.
+		 *
+		 * @property options
+		 * @type {Object}
+		 * @default
+		 */
+		Loader.options = {
+			'splitTags': ['h1', 'h2', 'h3'],
+			'joinHead': false,
+		};
 
 	/**
 	 * Load html from an url.
@@ -96,14 +93,10 @@ define(['jquery'], function($) {
 	}
 
 	Loader.prototype.render = function(into) {
-		this.cleanup();
+		into.empty();
 		this.sections.forEach(function(el) {
 			$('<div class="section">').append(el).appendTo(into);
 		});
-	}
-
-	Loader.prototype.cleanup = function() {
-		$('div.section').remove();
 	}
 
 	return {

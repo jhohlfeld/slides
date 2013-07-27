@@ -7,7 +7,8 @@ requirejs.config({
     baseUrl: '/base/src',
 
     paths: {
-    	'jquery': '../bower_components/jquery/jquery.min',
+      'jquery': '../bower_components/jquery/jquery.min',
+    	'jquery-mockjax': '../bower_components/jquery-mockjax/jquery.mockjax',
     	'handlebars': '../bower_components/handlebars/handlebars',
     	'hbs' : '../bower_components/requirejs-hbs/hbs',
     	'text' : '../bower_components/requirejs-text/text',

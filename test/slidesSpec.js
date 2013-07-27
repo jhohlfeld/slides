@@ -1,5 +1,3 @@
-var url = '/base/src/START.html';
-
 define(["streamloader", "text!/base/src/START.html"], function(streamloader, _html) {
 
 	// FIRST -basic- group
