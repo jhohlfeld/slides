@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>streamloader.js - The streamloader API</title>
+    <title>app.js - The streamloader API</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -90,114 +90,166 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: streamloader.js</h1>
+                        <h1 class="file-heading">File: app.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-//streamloader.js
 /**
- * The streamloader object takes care of loading an html
- * into a stream (string object) and at the same time
- * distributes this stream as a number of sections.
- *
- * The streamloader object returns a pormise
- * with an html string loaded via ajax.
- *
- * Use it&#x27;s load() method to get started.
- *
- * @example
- *     loader = new Loader();
- *     loader.load(&#x27;http://so.me/html/&#x27;)
- *
- * The &#x60;loader.html&#x60; will contain the raw html
- * stream, &#x60;loader.sections&#x60; the distributed node
- * elements as array of arrays (of elements).
- *
- * @module streamloader
- * @main streamloader
- *
+ * The application module.
+ * 
+ * In here you find all high-level api methods
+ * that drive the application.
+ * 
+ * @module app
  */
-define([&#x27;jquery&#x27;], function($) {
+define([&quot;hbs!tpl/viewer&quot;, &quot;streamloader&quot;, &quot;jquery&quot;], function(_viewer, streamloader, $) {
+
+	var Slides, Page;
 
 	/**
-	 * The Loader object.
+	 * Slides application.
 	 *
-	 * @class streamloader.Loader
+	 * This type brings all functionality that is needed
+	 * for a fully working slides application. It houses
+	 * any component handling as well as loading, displaying
+	 * and destoying/restoring methods for the view-end.
+	 *
+	 * @class app.Slides
+	 * @constructor
+	 * 
+	 * @param {Object} options
+	 */
+	Slides = function(options) {
+		this.options = $.extend({}, Slides.options);
+		this.loader = new streamloader.Loader();
+		this.pages = [];
+		this.currentPage = 0;
+
+		$(document).on(&#x27;keyup&#x27;, $.proxy(this.keyListener, this));
+	}
+
+	/**
+	 * Standard options for class {{#crossLink &quot;Slides&quot;}}{{/crossLink}}.
+	 * 
+	 * @property options
+	 * @type object
+	 */
+	Slides.options = {
+		&quot;container&quot;: &#x27;&lt;div id=&quot;slides-app&quot;&gt;&#x27;,
+		&quot;attachTo&quot;: &#x27;body&#x27;
+	};
+
+	/**
+	 * Loads a new slide object from an url.
+	 * 
+	 * The url is expected top point to some structured
+	 * - html - resource.
+	 * 
+	 * @method loadSlide
+	 * @param {String} url
+	 */
+	Slides.prototype.loadSlide = function(url) {
+		var into = $(this.options[&#x27;container&#x27;]);
+		var prom = this.loader.load(url, into);
+		prom.done($.proxy(function() {
+			into.children().hide().first().show();
+			into.appendTo(this.options[&#x27;attachTo&#x27;]);
+			into.children().each($.proxy(function(i, el) {
+				this.pages.push(new Page(el));
+			}, this));
+		}, this));
+		return prom;
+	}
+
+	Slides.prototype.getPages = function() {
+		return this.pages;
+	}
+
+	Slides.prototype.gotoPage = function(page) {
+		// transition?
+		if (page &lt; this.getPages().length) {
+			this.getPages()[this.currentPage].hide();
+			this.getPages()[page].show();
+			this.currentPage = page;
+		}
+	}
+
+	Slides.prototype.gotoNextPage = function() {
+		// body...
+		if (this.currentPage &lt; this.getPages().length) {
+			this.getPages()[this.currentPage].hide();
+			this.getPages()[this.currentPage++].show();
+		}
+	};
+
+	Slides.prototype.gotoPreviousPage = function() {
+		// body...
+		if (this.currentPage &gt; 0) {
+			this.getPages()[this.currentPage].hide();
+			this.getPages()[this.currentPage--].show();
+		}
+	};
+
+	Slides.prototype.gotoFirstPage = function() {
+		// body...
+		var pages = this.getPages();
+		if (this.currentPage != 0) {
+			pages[this.currentPage].hide();
+			pages[0].show();
+			this.currentPage = 0;
+		}
+	};
+
+	Slides.prototype.gotoLastPage = function() {
+		// body...
+		var pages = this.getPages();
+		if (this.currentPage != pages.length - 1) {
+			pages[this.currentPage].hide();
+			var goto = pages.length - 1;
+			pages[goto].show();
+			this.currentPage = goto;
+		}
+	};
+
+	/**
+	 * 
+	 * @method keyListener
+	 */
+	Slides.prototype.keyListener = function (e) {
+		// pgup, left or up
+		if([33, 37, 38].indexOf(e.which) != -1) {
+			this.gotoPreviousPage();
+		}
+
+		// pgdown, right or down
+		if([34, 39, 40].indexOf(e.which) != -1) {
+			this.gotoNextPage();
+		}
+
+		//pos1
+		if([36].indexOf(e.which) != -1) {
+			this.gotoFirstPage();
+		}
+
+		//end
+		if([35].indexOf(e.which) != -1) {
+			this.gotoLastPage();
+		}
+	}
+
+	/**
+	 *
+	 * @class app.Page
 	 * @constructor
 	 */
-	var Loader = function(options) {
-			var options = options || {};
-			this.options = $.extend(
-			$.extend({}, Loader.options), options);
-			this.html = null;
-			this.sections = [];
-		}
-
-		/**
-		 * Default options for {Loader}.
-		 *
-		 * @property options
-		 * @type {Object}
-		 * @default
-		 */
-		Loader.options = {
-			&#x27;splitTags&#x27;: [&#x27;h1&#x27;, &#x27;h2&#x27;, &#x27;h3&#x27;],
-			&#x27;joinHead&#x27;: false,
-		};
-
-	/**
-	 * Load html from an url.
-	 * Optionally loads the dom into some element.
-	 *
-	 * @method load
-	 * @param {String} url
-	 * @param {HTTPElement} into (optional)
-	 */
-	Loader.prototype.load = function(url, into) {
-		var url = url || this.url;
-		var into = $(into || &#x27;body&#x27;);
-		return $.get(url, $.proxy(function(data) {
-			this.distribute(data);
-			this.render(into);
-		}, this));
-	}
-
-	/**
-	 * Distributes the html over sections using
-	 * the predefined &#x27;splitTags&#x27; config option.
-	 *
-	 * @method distribute
-	 * @param {String} html
-	 */
-	Loader.prototype.distribute = function(html) {
-		this.sections = [];
-		var st = this.options[&#x27;splitTags&#x27;].join(&#x27;,&#x27;);
-		this.html = $(html).filter(&#x27;:not(#text)&#x27;);
-		var sel = this.html.filter(st);
-		if (!(sel.length &gt; 1)) {
-			this.sections.push(this.html);
-			return;
-		}
-		var i = 0;
-		var start = 0;
-		while (start &gt; -1) {
-			i = $(sel.filter(&#x27;:nth-child(&#x27; + (i + 1) + &#x27;) ~&#x27;)).index();
-			var slice = this.html.slice(start, i != -1 ? i : undefined);
-			this.sections.push(slice);
-			start = i;
-		}
-	}
-
-	Loader.prototype.render = function(into) {
-		into.empty();
-		this.sections.forEach(function(el) {
-			$(&#x27;&lt;div class=&quot;section&quot;&gt;&#x27;).append(el).appendTo(into);
-		});
+	Page = function(el) {
+		this.el = el;
 	}
 
 	return {
-		&#x27;Loader&#x27;: Loader
-	};
+		&quot;Slides&quot;: Slides,
+		&quot;Page&quot;: Page
+	}
 });
     </pre>
 </div>

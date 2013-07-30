@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>streamloader.js - The streamloader API</title>
+    <title>app.Page - The streamloader API</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -90,116 +90,123 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: streamloader.js</h1>
+                        <h1>app.Page Class</h1>
+<div class="box meta">
+    
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-//streamloader.js
-/**
- * The streamloader object takes care of loading an html
- * into a stream (string object) and at the same time
- * distributes this stream as a number of sections.
- *
- * The streamloader object returns a pormise
- * with an html string loaded via ajax.
- *
- * Use it&#x27;s load() method to get started.
- *
- * @example
- *     loader = new Loader();
- *     loader.load(&#x27;http://so.me/html/&#x27;)
- *
- * The &#x60;loader.html&#x60; will contain the raw html
- * stream, &#x60;loader.sections&#x60; the distributed node
- * elements as array of arrays (of elements).
- *
- * @module streamloader
- * @main streamloader
- *
- */
-define([&#x27;jquery&#x27;], function($) {
+    
 
-	/**
-	 * The Loader object.
-	 *
-	 * @class streamloader.Loader
-	 * @constructor
-	 */
-	var Loader = function(options) {
-			var options = options || {};
-			this.options = $.extend(
-			$.extend({}, Loader.options), options);
-			this.html = null;
-			this.sections = [];
-		}
+    
+        <div class="foundat">
+            Defined in: <a href="../files/app.js.html#l144"><code>app.js:144</code></a>
+        </div>
+    
 
-		/**
-		 * Default options for {Loader}.
-		 *
-		 * @property options
-		 * @type {Object}
-		 * @default
-		 */
-		Loader.options = {
-			&#x27;splitTags&#x27;: [&#x27;h1&#x27;, &#x27;h2&#x27;, &#x27;h3&#x27;],
-			&#x27;joinHead&#x27;: false,
-		};
+    
+        
+            Module: <a href="../modules/app.html">app</a>
+        
+    
 
-	/**
-	 * Load html from an url.
-	 * Optionally loads the dom into some element.
-	 *
-	 * @method load
-	 * @param {String} url
-	 * @param {HTTPElement} into (optional)
-	 */
-	Loader.prototype.load = function(url, into) {
-		var url = url || this.url;
-		var into = $(into || &#x27;body&#x27;);
-		return $.get(url, $.proxy(function(data) {
-			this.distribute(data);
-			this.render(into);
-		}, this));
-	}
+    
+</div>
 
-	/**
-	 * Distributes the html over sections using
-	 * the predefined &#x27;splitTags&#x27; config option.
-	 *
-	 * @method distribute
-	 * @param {String} html
-	 */
-	Loader.prototype.distribute = function(html) {
-		this.sections = [];
-		var st = this.options[&#x27;splitTags&#x27;].join(&#x27;,&#x27;);
-		this.html = $(html).filter(&#x27;:not(#text)&#x27;);
-		var sel = this.html.filter(st);
-		if (!(sel.length &gt; 1)) {
-			this.sections.push(this.html);
-			return;
-		}
-		var i = 0;
-		var start = 0;
-		while (start &gt; -1) {
-			i = $(sel.filter(&#x27;:nth-child(&#x27; + (i + 1) + &#x27;) ~&#x27;)).index();
-			var slice = this.html.slice(start, i != -1 ? i : undefined);
-			this.sections.push(slice);
-			start = i;
-		}
-	}
 
-	Loader.prototype.render = function(into) {
-		into.empty();
-		this.sections.forEach(function(el) {
-			$(&#x27;&lt;div class=&quot;section&quot;&gt;&#x27;).append(el).appendTo(into);
-		});
-	}
 
-	return {
-		&#x27;Loader&#x27;: Loader
-	};
-});
-    </pre>
+<div class="box intro">
+    
+</div>
+
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_app.Page" class="method item">
+    <h3 class="name"><code>app.Page</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/app.js.html#l144"><code>app.js:144</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+    </div>
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+        
+        
+        
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+
+            
+
+            
+
+            
+        </div>
+
+        
+
+        
+
+        
+
+        
+    </div>
 </div>
 
                     </div>

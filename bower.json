@@ -3,13 +3,14 @@
   "version": "0.0.1",
   "main": "src/main.js",
   "dependencies": {
-    "handlebars": "~1.0.0",
-    "jquery": "~2.0.3",
-    "sockjs": "~0.3.4",
-    "requirejs": "~2.1.8",
-    "requirejs-text": "~2.0.7",
-    "requirejs-hbs": "*"
-  },
+    "handlebars": "git://github.com/components/handlebars.js.git#~1.0.0",
+    "jquery": "git://github.com/components/jquery.git#~2.0.3",
+    "requirejs-hbs": "git://github.com/epeli/requirejs-hbs.git",
+    "requirejs-text": "git://github.com/requirejs/text.git#~2.0.7",
+    "requirejs": "git://github.com/jrburke/requirejs.git#~2.1.8",
+    "sockjs": "git://github.com/myguidingstar/bower-sockjs.git#0.3.4",
+    "jquery-mockjax": "git://github.com/appendto/jquery-mockjax.git#1.5.2"
+ },
   "ignore": [
     "**/.*",
     "node_modules",

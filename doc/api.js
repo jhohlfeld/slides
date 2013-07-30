@@ -1,12 +1,20 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
+        "app.Page",
+        "app.Slides",
         "streamloader.Loader"
     ],
     "modules": [
+        "app",
         "streamloader"
     ],
     "allModules": [
+        {
+            "displayName": "app",
+            "name": "app",
+            "description": "The application module.\n\nIn here you find all high-level api methods\nthat drive the application."
+        },
         {
             "displayName": "streamloader",
             "name": "streamloader",

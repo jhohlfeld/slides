@@ -4,6 +4,6 @@
   "version": "0.0.1",
   "url": "http://netronaut.de/slides",
   "options": {
-    "outdir": "../build/apidocs"
+    "outdir": "../doc"
   }
 }

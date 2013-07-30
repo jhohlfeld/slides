@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>streamloader.Loader - The streamloader API</title>
+    <title>app.Slides - The streamloader API</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -90,7 +90,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>streamloader.Loader Class</h1>
+                        <h1>app.Slides Class</h1>
 <div class="box meta">
     
 
@@ -98,13 +98,13 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/streamloader.js.html#l26"><code>streamloader.js:26</code></a>
+            Defined in: <a href="../files/app.js.html#l13"><code>app.js:13</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/streamloader.html">streamloader</a>
+            Module: <a href="../modules/app.html">app</a>
         
     
 
@@ -114,18 +114,32 @@
 
 
 <div class="box intro">
-    <p>The Loader object.</p>
+    <p>Slides application.</p>
+<p>This type brings all functionality that is needed
+for a fully working slides application. It houses
+any component handling as well as loading, displaying
+and destoying/restoring methods for the view-end.</p>
 
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_streamloader.Loader" class="method item">
-    <h3 class="name"><code>streamloader.Loader</code></h3>
+        <div id="method_app.Slides" class="method item">
+    <h3 class="name"><code>app.Slides</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>options</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -153,7 +167,7 @@
             
         
         
-        <a href="../files/streamloader.js.html#l26"><code>streamloader.js:26</code></a>
+        <a href="../files/app.js.html#l13"><code>app.js:13</code></a>
         
         </p>
 
@@ -167,6 +181,29 @@
         
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">options</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -202,14 +239,14 @@
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_distribute">distribute</a>
+                                <a href="#method_keyListener">keyListener</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_load">load</a>
+                                <a href="#method_loadSlide">loadSlide</a>
 
                                 
                                 
@@ -246,21 +283,11 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_distribute" class="method item">
-    <h3 class="name"><code>distribute</code></h3>
+                    <div id="method_keyListener" class="method item">
+    <h3 class="name"><code>keyListener</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>html</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -288,7 +315,7 @@
             
         
         
-        <a href="../files/streamloader.js.html#l69"><code>streamloader.js:69</code></a>
+        <a href="../files/app.js.html#l118"><code>app.js:118</code></a>
         
         </p>
 
@@ -299,34 +326,9 @@
     </div>
 
     <div class="description">
-        <p>Distributes the html over sections using
-the predefined &#39;splitTags&#39; config option.</p>
-
+        
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">html</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -335,8 +337,8 @@ the predefined &#39;splitTags&#39; config option.</p>
 </div>
 
                 
-                    <div id="method_load" class="method item">
-    <h3 class="name"><code>load</code></h3>
+                    <div id="method_loadSlide" class="method item">
+    <h3 class="name"><code>loadSlide</code></h3>
 
     
         <div class="args">
@@ -348,12 +350,6 @@ the predefined &#39;splitTags&#39; config option.</p>
                     
                 </li>
             
-                <li class="arg">
-                    
-                        <code>into</code>
-                    
-                </li>
-            
             </ul><span class="paren">)</span>
         </div>
     
@@ -383,7 +379,7 @@ the predefined &#39;splitTags&#39; config option.</p>
             
         
         
-        <a href="../files/streamloader.js.html#l52"><code>streamloader.js:52</code></a>
+        <a href="../files/app.js.html#l46"><code>app.js:46</code></a>
         
         </p>
 
@@ -394,8 +390,9 @@ the predefined &#39;splitTags&#39; config option.</p>
     </div>
 
     <div class="description">
-        <p>Load html from an url.
-Optionally loads the dom into some element.</p>
+        <p>Loads a new slide object from an url.</p>
+<p>The url is expected top point to some structured
+- html - resource.</p>
 
     </div>
 
@@ -415,22 +412,6 @@ Optionally loads the dom into some element.</p>
 
                     <div class="param-description">
                          
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">into</code>
-                        <span class="type">HTTPElement</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>(optional)</p>
-
                     </div>
 
                     
@@ -477,7 +458,7 @@ Optionally loads the dom into some element.</p>
             
         
         
-        <a href="../files/streamloader.js.html#l40"><code>streamloader.js:40</code></a>
+        <a href="../files/app.js.html#l35"><code>app.js:35</code></a>
         
         </p>
 
@@ -487,7 +468,7 @@ Optionally loads the dom into some element.</p>
     </div>
 
     <div class="description">
-        <p>Default options for {Loader}.</p>
+        <p>Standard options for class Slides.</p>
 
     </div>
 

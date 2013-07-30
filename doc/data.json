@@ -6,6 +6,18 @@
         "url": "http://netronaut.de/slides"
     },
     "files": {
+        "app.js": {
+            "name": "app.js",
+            "modules": {
+                "app": 1
+            },
+            "classes": {
+                "app.Slides": 1,
+                "app.Page": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "streamloader.js": {
             "name": "streamloader.js",
             "modules": {
@@ -19,6 +31,20 @@
         }
     },
     "modules": {
+        "app": {
+            "name": "app",
+            "submodules": {},
+            "classes": {
+                "app.Slides": 1,
+                "app.Page": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "app.js",
+            "line": 144,
+            "description": "The application module.\n\nIn here you find all high-level api methods\nthat drive the application."
+        },
         "streamloader": {
             "name": "streamloader",
             "submodules": {},
@@ -29,7 +55,7 @@
             "namespaces": {},
             "tag": "main",
             "file": "streamloader.js",
-            "line": 27,
+            "line": 26,
             "description": "The streamloader object takes care of loading an html\ninto a stream (string object) and at the same time\ndistributes this stream as a number of sections.\n\nThe streamloader object returns a pormise\nwith an html string loaded via ajax.\n\nUse it's load() method to get started.",
             "example": [
                 "\n    loader = new Loader();\n    loader.load('http://so.me/html/')\n\nThe `loader.html` will contain the raw html\nstream, `loader.sections` the distributed node\nelements as array of arrays (of elements)."
@@ -38,6 +64,42 @@
         }
     },
     "classes": {
+        "app.Slides": {
+            "name": "app.Slides",
+            "shortname": "app.Slides",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "app",
+            "namespace": "",
+            "file": "app.js",
+            "line": 13,
+            "description": "Slides application.\n\nThis type brings all functionality that is needed\nfor a fully working slides application. It houses\nany component handling as well as loading, displaying\nand destoying/restoring methods for the view-end.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ]
+        },
+        "app.Page": {
+            "name": "app.Page",
+            "shortname": "app.Page",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "app",
+            "namespace": "",
+            "file": "app.js",
+            "line": 144,
+            "is_constructor": 1
+        },
         "streamloader.Loader": {
             "name": "streamloader.Loader",
             "shortname": "streamloader.Loader",
@@ -49,15 +111,49 @@
             "module": "streamloader",
             "namespace": "",
             "file": "streamloader.js",
-            "line": 27,
+            "line": 26,
             "description": "The Loader object.",
             "is_constructor": 1
         }
     },
     "classitems": [
         {
+            "file": "app.js",
+            "line": 35,
+            "description": "Standard options for class {{#crossLink \"Slides\"}}{{/crossLink}}.",
+            "itemtype": "property",
+            "name": "options",
+            "type": "object",
+            "class": "app.Slides",
+            "module": "app"
+        },
+        {
+            "file": "app.js",
+            "line": 46,
+            "description": "Loads a new slide object from an url.\n\nThe url is expected top point to some structured\n- html - resource.",
+            "itemtype": "method",
+            "name": "loadSlide",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "app.Slides",
+            "module": "app"
+        },
+        {
+            "file": "app.js",
+            "line": 118,
+            "itemtype": "method",
+            "name": "keyListener",
+            "class": "app.Slides",
+            "module": "app"
+        },
+        {
             "file": "streamloader.js",
-            "line": 43,
+            "line": 40,
             "description": "Default options for {Loader}.",
             "itemtype": "property",
             "name": "options",
@@ -68,7 +164,7 @@
         },
         {
             "file": "streamloader.js",
-            "line": 54,
+            "line": 52,
             "description": "Load html from an url.\nOptionally loads the dom into some element.",
             "itemtype": "method",
             "name": "load",
@@ -89,8 +185,8 @@
         },
         {
             "file": "streamloader.js",
-            "line": 71,
-            "description": "Distributes the html over sections using\nthe predefined 'splitTagName' config option.",
+            "line": 69,
+            "description": "Distributes the html over sections using\nthe predefined 'splitTags' config option.",
             "itemtype": "method",
             "name": "distribute",
             "params": [
