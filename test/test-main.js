@@ -23,6 +23,9 @@ requirejs.config({
   	'handlebars': {
   		exports: 'Handlebars'
   	},
+    'jquery-mockjax':{
+      exports: 'jquery-mockjax'
+    }
 //        'underscore': {
 //            exports: '_'
 //        }
