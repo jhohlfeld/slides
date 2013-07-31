@@ -16,7 +16,7 @@
 ##
 ###############################################################################
 
-import uuid, sys, os, mimetypes
+import uuid, sys, os, mimetypes, codecs, markdown
 
 from twisted.python import log
 from twisted.internet import reactor
@@ -34,6 +34,8 @@ from autobahn.resource import WebSocketResource, \
 
 from exceptions import IOError
 
+mimetypes.init();
+
 ##
 ## Our WebSocket Server protocol
 ##
@@ -47,34 +49,83 @@ class EchoServerProtocol(WebSocketServerProtocol):
 ## Our WSGI application
 ##
 def app(environ, start_response):
-    """Simplest possible application object"""
-    path = environ.get('PATH_INFO', '').lstrip('/')
-    resource = os.path.join(os.getcwd(), path)
-    #print resource
+    """Simplest possible application object
+
+    Just serving static files...
+
+    And handling some markdown-files (.md)
+    """
+
+    method = environ.get('REQUEST_METHOD')
     data = ''
     ctype = 'text/plain'
-    encoding = 'utf-8'
-    print 'Serving resource %s' % resource
+    encoding = 'None'
+    code = '200'
+    
+    # determine resource location
+    path = environ.get('PATH_INFO', '').lstrip('/')
+    resource = os.path.join(os.getcwd(), path)
+    print '%s %s' % (method, resource)
+
+    # try to open the resource
     try:
-      with open(resource, 'r') as r:
-         data = r.read();
-      r.closed
-      status = '200 OK'
-      (ctype, encoding) = mimetypes.guess_type(resource)
-    except IOError as e:
-      if e.errno == 2:
-         status = '404 Not Found'
+
+      # handle markdown (.md)
+      if resource.endswith('.md'):
+         data = read_markdown(resource)
+
+      # handle all other files
       else:
-         status = '505 Internal Server Error'
+         with open(resource, 'r') as r:
+            data = r.read();
+         r.closed
+
+      code = '200'
+
+      # guess the content type and encoding
+      (ctype, encoding) = mimetypes.guess_type(resource)
+
+    except IOError as e:
+
+      # handle 404 and 505 error
+      if e.errno == 2:
+         code = '404'
+      else:
+         code = '505'
       ctype = 'text/html'
-      data = '<html><body><h1>%s</h1></body></html>' % status
+      data = '<html><body><h1>%s</h1></body></html>' % status(code)
+
+    print '%s %s' % (code, resource)
+
+    # set response headers
     response_headers = [
         ('Content-Type', ctype),
         ('Content-Encoding', encoding),
         ('Content-Length', str(len(data)))
     ]
-    start_response(status, response_headers)
+    start_response(status(code), response_headers)
     return iter([data])
+
+
+def status(code):
+   """Gets a proper http status
+   """
+   status_codes = dict([
+     ('200', 'OK'),
+     ('404', 'Not Found'),
+     ('505', 'Internal Server Error')
+   ])
+   return '%s %s' % (code, status_codes[code])
+
+
+def read_markdown(resource, encoding='utf-8'):
+   """ Returns html generated from markdown source.
+   """
+   md = ''
+   with codecs.open(resource, mode='r', encoding=encoding) as f:
+      md = f.read()
+   f.closed
+   return markdown.markdown(md).encode('utf-8')
 
 
 if __name__ == "__main__":

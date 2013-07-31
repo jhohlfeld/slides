@@ -122,14 +122,16 @@ define([&quot;hbs!tpl/viewer&quot;, &quot;streamloader&quot;, &quot;jquery&quot;
 	Slides = function(options) {
 		this.options = $.extend({}, Slides.options);
 		this.loader = new streamloader.Loader();
+		this.container = null;
 		this.pages = [];
 		this.currentPage = 0;
 
 		$(document).on(&#x27;keyup&#x27;, $.proxy(this.keyListener, this));
+		$(window).on(&#x27;resize&#x27;, $.proxy(this.resizeListener, this));
 	}
 
 	/**
-	 * Standard options for class {{#crossLink &quot;Slides&quot;}}{{/crossLink}}.
+	 * Standard options.
 	 * 
 	 * @property options
 	 * @type object
@@ -149,11 +151,12 @@ define([&quot;hbs!tpl/viewer&quot;, &quot;streamloader&quot;, &quot;jquery&quot;
 	 * @param {String} url
 	 */
 	Slides.prototype.loadSlide = function(url) {
-		var into = $(this.options[&#x27;container&#x27;]);
+		var into = this.container = $(this.options[&#x27;container&#x27;]);
 		var prom = this.loader.load(url, into);
 		prom.done($.proxy(function() {
 			into.children().hide().first().show();
 			into.appendTo(this.options[&#x27;attachTo&#x27;]);
+			this.resizeListener(null);
 			into.children().each($.proxy(function(i, el) {
 				this.pages.push(new Page(el));
 			}, this));
@@ -167,7 +170,7 @@ define([&quot;hbs!tpl/viewer&quot;, &quot;streamloader&quot;, &quot;jquery&quot;
 
 	Slides.prototype.gotoPage = function(page) {
 		// transition?
-		if (page &lt; this.getPages().length) {
+		if (0 &lt;= page &lt; this.getPages().length - 1) {
 			this.getPages()[this.currentPage].hide();
 			this.getPages()[page].show();
 			this.currentPage = page;
@@ -176,9 +179,10 @@ define([&quot;hbs!tpl/viewer&quot;, &quot;streamloader&quot;, &quot;jquery&quot;
 
 	Slides.prototype.gotoNextPage = function() {
 		// body...
-		if (this.currentPage &lt; this.getPages().length) {
+		if (this.currentPage &lt; this.getPages().length - 1) {
+			this.getPages()[this.currentPage + 1].show();
 			this.getPages()[this.currentPage].hide();
-			this.getPages()[this.currentPage++].show();
+			this.currentPage++;
 		}
 	};
 
@@ -186,7 +190,8 @@ define([&quot;hbs!tpl/viewer&quot;, &quot;streamloader&quot;, &quot;jquery&quot;
 		// body...
 		if (this.currentPage &gt; 0) {
 			this.getPages()[this.currentPage].hide();
-			this.getPages()[this.currentPage--].show();
+			this.getPages()[this.currentPage - 1].show();
+			this.currentPage--;
 		}
 	};
 
@@ -215,26 +220,42 @@ define([&quot;hbs!tpl/viewer&quot;, &quot;streamloader&quot;, &quot;jquery&quot;
 	 * 
 	 * @method keyListener
 	 */
-	Slides.prototype.keyListener = function (e) {
+	Slides.prototype.keyListener = function(e) {
 		// pgup, left or up
-		if([33, 37, 38].indexOf(e.which) != -1) {
+		if ([33, 37, 38].indexOf(e.which) != -1) {
 			this.gotoPreviousPage();
 		}
 
 		// pgdown, right or down
-		if([34, 39, 40].indexOf(e.which) != -1) {
+		if ([34, 39, 40].indexOf(e.which) != -1) {
 			this.gotoNextPage();
 		}
 
 		//pos1
-		if([36].indexOf(e.which) != -1) {
+		if ([36].indexOf(e.which) != -1) {
 			this.gotoFirstPage();
 		}
 
 		//end
-		if([35].indexOf(e.which) != -1) {
+		if ([35].indexOf(e.which) != -1) {
 			this.gotoLastPage();
 		}
+	}
+
+	/**
+	 * Listener.
+	 * 
+	 * Listenss for the resizing of the window object.
+	 * 
+	 * @method resizeListener
+	 */
+	Slides.prototype.resizeListener = function(e) {
+		var c = this.container;
+		var wMargin = c.outerWidth(true) - c.outerWidth(false);
+		var hMargin = c.outerHeight(true) - c.outerHeight(false);
+		var p = this.container.parent();
+		this.container.width(p.width() - wMargin);
+		this.container.height(p.height() - hMargin);
 	}
 
 	/**
@@ -244,6 +265,15 @@ define([&quot;hbs!tpl/viewer&quot;, &quot;streamloader&quot;, &quot;jquery&quot;
 	 */
 	Page = function(el) {
 		this.el = el;
+	}
+
+	Page.prototype.show = function() {
+		$(this.el).show();
+	}
+
+
+	Page.prototype.hide = function() {
+		$(this.el).hide();
 	}
 
 	return {

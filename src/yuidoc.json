@@ -4,6 +4,6 @@
   "version": "0.0.1",
   "url": "http://netronaut.de/slides",
   "options": {
-    "outdir": "../doc"
+    "outdir": "../doc/api-doc"
   }
 }

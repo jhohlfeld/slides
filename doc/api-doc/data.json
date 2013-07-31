@@ -42,7 +42,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "app.js",
-            "line": 144,
+            "line": 165,
             "description": "The application module.\n\nIn here you find all high-level api methods\nthat drive the application."
         },
         "streamloader": {
@@ -97,7 +97,7 @@
             "module": "app",
             "namespace": "",
             "file": "app.js",
-            "line": 144,
+            "line": 165,
             "is_constructor": 1
         },
         "streamloader.Loader": {
@@ -119,8 +119,8 @@
     "classitems": [
         {
             "file": "app.js",
-            "line": 35,
-            "description": "Standard options for class {{#crossLink \"Slides\"}}{{/crossLink}}.",
+            "line": 37,
+            "description": "Standard options.",
             "itemtype": "property",
             "name": "options",
             "type": "object",
@@ -129,7 +129,7 @@
         },
         {
             "file": "app.js",
-            "line": 46,
+            "line": 48,
             "description": "Loads a new slide object from an url.\n\nThe url is expected top point to some structured\n- html - resource.",
             "itemtype": "method",
             "name": "loadSlide",
@@ -145,9 +145,18 @@
         },
         {
             "file": "app.js",
-            "line": 118,
+            "line": 123,
             "itemtype": "method",
             "name": "keyListener",
+            "class": "app.Slides",
+            "module": "app"
+        },
+        {
+            "file": "app.js",
+            "line": 149,
+            "description": "Listener.\n\nListenss for the resizing of the window object.",
+            "itemtype": "method",
+            "name": "resizeListener",
             "class": "app.Slides",
             "module": "app"
         },
