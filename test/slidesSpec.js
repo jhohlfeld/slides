@@ -29,8 +29,8 @@ define(["streamloader", "text!/base/src/START.html"], function(streamloader, _ht
 			});
 		});
 
-		it("has a config option to set the splitting method", function() {
-			expect(streamloader.Loader.options['joinHead']).toBeDefined();
+		it("has a config option to set a inheritable sectionheader", function() {
+			expect(streamloader.Loader.options['inheritableHeader']).toBeDefined();
 		});
 
 		/**
@@ -111,20 +111,22 @@ define(["streamloader", "text!/base/src/START.html"], function(streamloader, _ht
 				st = loader.options.splitTags.join(',');
 				expect($(_html).filter(st).length).toEqual(loader.sections.length);
 			});
+
 		});
 
 		/**
 		 * The sections
 		 *
 		 */
-		xdescribe("sections", function() {
+		describe("sections", function() {
 
 			beforeEach(function() {
 				loader2.distribute(_html);
 			});
 
 			it("are singular", function() {
-				expect($(loader2.sections[0]).filter('h2').length).toEqual(1);
+				expect($(loader2.sections[0]).filter('h1').length).toEqual(1);
+				expect($(loader2.sections[1]).filter('h2').length).toEqual(1);
 			});
 
 			it("are unique", function() {
@@ -140,7 +142,7 @@ define(["streamloader", "text!/base/src/START.html"], function(streamloader, _ht
 		 * The views are created
 		 *
 		 */
-		xdescribe("views", function() {
+		describe("views", function() {
 
 			beforeEach(function() {
 				loader2.distribute(_html);
@@ -148,8 +150,17 @@ define(["streamloader", "text!/base/src/START.html"], function(streamloader, _ht
 			});
 
 			it("should have been generated.", function() {
-				expect($('div.section').length).toBe(2);
+				expect($('div.section').length).toBe(loader2.sections.length);
 			});
+
+			it("have a copy of each inheritable header", function() {
+				loader2.options.splitTags = streamloader.Loader.options.splitTags;
+				loader2.distribute(_html);
+				loader2.render($('body'));
+				expect($('div.section').children().
+					filter('h2 ~ h3').length).
+				toEqual(2);
+			})
 		});
 
 	});

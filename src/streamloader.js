@@ -46,7 +46,7 @@ define(['jquery'], function($) {
 		 */
 		Loader.options = {
 			'splitTags': ['h1', 'h2', 'h3'],
-			'joinHead': false,
+			'inheritableHeader': ['h2']
 		};
 
 	/**
@@ -55,7 +55,7 @@ define(['jquery'], function($) {
 	 *
 	 * @method load
 	 * @param {String} url
-	 * @param {HTTPElement} into (optional)
+	 * @param {HTMLElement} into (optional)
 	 */
 	Loader.prototype.load = function(url, into) {
 		var url = url || this.url;
@@ -92,10 +92,38 @@ define(['jquery'], function($) {
 		}
 	}
 
+	/**
+	 * Render method.
+	 * 
+	 * Will place the sections and post-process
+	 * the resulting html on the dom.
+	 * 
+	 * @method render
+	 * @param {HTMLElement} into
+	 */
 	Loader.prototype.render = function(into) {
-		into.empty();
+		$(into).empty();
+		var sects = [];
 		this.sections.forEach(function(el) {
-			$('<div class="section">').append(el).appendTo(into);
+			var d = $('<div class="section">').append(el).appendTo(into);
+			sects.push(d);
+		});
+		var _me = this;
+		var found = [];
+		sects.forEach(function(el) {
+			var children = $(el).children();
+			if(found.length) {
+				if(children[0].nodeName != found[0].nodeName) {
+					found.clone().insertBefore(children.first());
+				} else {
+					found = null;
+				}
+			}
+			_me.options['inheritableHeader'].forEach(function(h) {
+				if(null != (found = $(el).children(h).first())) {
+					return;
+				}
+			});
 		});
 	}
 

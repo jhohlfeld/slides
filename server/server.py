@@ -1,3 +1,4 @@
+#!/usr/bin/python
 ###############################################################################
 ##
 ##  Copyright 2012 Tavendo GmbH
@@ -16,21 +17,19 @@
 ##
 ###############################################################################
 
-import uuid, sys, os, mimetypes, codecs, markdown
+import uuid, sys, os, mimetypes, codecs, markdown, re
 
 from twisted.python import log
 from twisted.internet import reactor
 from twisted.web.server import Site
 from twisted.web.wsgi import WSGIResource
 
-from flask import Flask, render_template
-
 from autobahn.websocket import WebSocketServerFactory, \
-                               WebSocketServerProtocol
+                           WebSocketServerProtocol
 
 from autobahn.resource import WebSocketResource, \
-                              WSGIRootResource, \
-                              HTTPChannelHixie76Aware
+                          WSGIRootResource, \
+                          HTTPChannelHixie76Aware
 
 from exceptions import IOError
 
@@ -41,133 +40,144 @@ mimetypes.init();
 ##
 class EchoServerProtocol(WebSocketServerProtocol):
 
-   def onMessage(self, msg, binary):
-      self.sendMessage(msg, binary)
+  def onMessage(self, msg, binary):
+    self.sendMessage(msg, binary)
 
 
 ##
 ## Our WSGI application
 ##
 def app(environ, start_response):
-    """Simplest possible application object
+  """Simplest possible application object
 
-    Just serving static files...
+  Just serving static files...
 
-    And handling some markdown-files (.md)
-    """
+  And handling some markdown-files (.md)
+  """
 
-    method = environ.get('REQUEST_METHOD')
-    data = ''
-    ctype = 'text/plain'
-    encoding = 'None'
+  method = environ.get('REQUEST_METHOD')
+  data = ''
+  ctype = 'text/plain'
+  encoding = 'None'
+  code = '200'
+
+  # determine resource location
+  path = environ.get('PATH_INFO', '').lstrip('/')
+  resource = os.path.join(os.getcwd(), path)
+  print '%s %s' % (method, resource)
+
+  # try to open the resource
+  try:
+
+    # handle markdown (.md)
+    if resource.endswith('.md'):
+       data = read_markdown(resource)
+
+    # handle all other files
+    else:
+       with open(resource, 'r') as r:
+          data = r.read();
+       r.closed
+
     code = '200'
-    
-    # determine resource location
-    path = environ.get('PATH_INFO', '').lstrip('/')
-    resource = os.path.join(os.getcwd(), path)
-    print '%s %s' % (method, resource)
 
-    # try to open the resource
-    try:
+    # guess the content type and encoding
+    (ctype, encoding) = mimetypes.guess_type(resource)
 
-      # handle markdown (.md)
-      if resource.endswith('.md'):
-         data = read_markdown(resource)
+  except IOError as e:
 
-      # handle all other files
-      else:
-         with open(resource, 'r') as r:
-            data = r.read();
-         r.closed
+    # handle 404 and 505 error
+    if e.errno == 2:
+       code = '404'
+    else:
+       code = '505'
+    ctype = 'text/html'
+    data = '<html><body><h1>%s</h1></body></html>' % status(code)
 
-      code = '200'
+  print '%s %s' % (code, resource)
 
-      # guess the content type and encoding
-      (ctype, encoding) = mimetypes.guess_type(resource)
-
-    except IOError as e:
-
-      # handle 404 and 505 error
-      if e.errno == 2:
-         code = '404'
-      else:
-         code = '505'
-      ctype = 'text/html'
-      data = '<html><body><h1>%s</h1></body></html>' % status(code)
-
-    print '%s %s' % (code, resource)
-
-    # set response headers
-    response_headers = [
-        ('Content-Type', ctype),
-        ('Content-Encoding', encoding),
-        ('Content-Length', str(len(data)))
-    ]
-    start_response(status(code), response_headers)
-    return iter([data])
+  # set response headers
+  response_headers = [
+      ('Content-Type', ctype),
+      ('Content-Encoding', encoding),
+      ('Content-Length', str(len(data)))
+  ]
+  start_response(status(code), response_headers)
+  return iter([data])
 
 
 def status(code):
-   """Gets a proper http status
-   """
-   status_codes = dict([
-     ('200', 'OK'),
-     ('404', 'Not Found'),
-     ('505', 'Internal Server Error')
-   ])
-   return '%s %s' % (code, status_codes[code])
+  """Gets a proper http status
+  """
+  status_codes = dict([
+   ('200', 'OK'),
+   ('404', 'Not Found'),
+   ('505', 'Internal Server Error')
+  ])
+  return '%s %s' % (code, status_codes[code])
 
 
 def read_markdown(resource, encoding='utf-8'):
-   """ Returns html generated from markdown source.
-   """
-   md = ''
-   with codecs.open(resource, mode='r', encoding=encoding) as f:
-      md = f.read()
-   f.closed
-   return markdown.markdown(md).encode('utf-8')
-
+  """ Returns html generated from markdown source.
+  """
+  md = ''
+  with codecs.open(resource, mode='r', encoding=encoding) as f:
+    md = f.read()
+  f.closed
+  return markdown.markdown(md).encode('utf-8')
 
 if __name__ == "__main__":
 
-   if len(sys.argv) > 1 and sys.argv[1] == 'debug':
-      log.startLogging(sys.stdout)
-      debug = True
-   else:
-      debug = False
+  if len(sys.argv) > 1 and sys.argv.count('debug') > 0:
+    log.startLogging(sys.stdout)
+    debug = True
+  else:
+    debug = False
 
-   app.debug = debug
-   if debug:
-      log.startLogging(sys.stdout)
-   
-   ##
-   ## create a Twisted Web resource for our WebSocket server
-   ##
-   wsFactory = WebSocketServerFactory("ws://localhost:8080",
-                                      debug = debug,
-                                      debugCodePaths = debug)
+  app.debug = debug
+  if debug:
+    log.startLogging(sys.stdout)
 
-   wsFactory.protocol = EchoServerProtocol
-   wsFactory.setProtocolOptions(allowHixie76 = True) # needed if Hixie76 is to be supported
+  host = 'localhost'
+  port = '5000'
 
-   wsResource = WebSocketResource(wsFactory)
+  ##
+  ## get port
+  ##
+  arg = sys.argv
+  port_arg = [m.group(0) for m in [m for m in [re.search('^\d+$', x) for x in arg] if type(m) != type(None)]]
+  if len(port_arg) > 0:
+    port = port_arg[0]
 
-   ##
-   ## create a Twisted Web WSGI resource for our Flask server
-   ##
-   wsgiResource = WSGIResource(reactor, reactor.getThreadPool(), app)
-   
-   ##
-   ## create a root resource serving everything via WSGI/Flask, but
-   ## the path "/ws" served by our WebSocket stuff
-   ##
-   rootResource = WSGIRootResource(wsgiResource, {'ws': wsResource})
-   
-   ##
-   ## create a Twisted Web Site and run everything
-   ##
-   site = Site(rootResource)
-   site.protocol = HTTPChannelHixie76Aware # needed if Hixie76 is to be supported
+  ##
+  ## create a Twisted Web resource for our WebSocket server
+  ##
+  wsFactory = WebSocketServerFactory("ws://%s:%s" % (host, port),
+                                    debug = debug,
+                                    debugCodePaths = debug)
 
-   reactor.listenTCP(5000, site)
-   reactor.run()
+  wsFactory.protocol = EchoServerProtocol
+  wsFactory.setProtocolOptions(allowHixie76 = True) # needed if Hixie76 is to be supported
+
+  wsResource = WebSocketResource(wsFactory)
+
+  ##
+  ## create a Twisted Web WSGI resource for our Flask server
+  ##
+  wsgiResource = WSGIResource(reactor, reactor.getThreadPool(), app)
+
+  ##
+  ## create a root resource serving everything via WSGI/Flask, but
+  ## the path "/ws" served by our WebSocket stuff
+  ##
+  rootResource = WSGIRootResource(wsgiResource, {'ws': wsResource})
+
+  ##
+  ## create a Twisted Web Site and run everything
+  ##
+  site = Site(rootResource)
+  site.protocol = HTTPChannelHixie76Aware # needed if Hixie76 is to be supported
+
+  print 'Listening for request at %s ...' % ('%s:%s' % (host, port))
+  reactor.listenTCP(int(port), site)
+  reactor.run()

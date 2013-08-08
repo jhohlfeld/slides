@@ -74,7 +74,7 @@ define(["hbs!tpl/viewer", "streamloader", "jquery"], function(_viewer, streamloa
 
 	Slides.prototype.gotoPage = function(page) {
 		// transition?
-		if (0 <= page < this.getPages().length - 1) {
+		if (0 <= page && page < this.getPages().length) {
 			this.getPages()[this.currentPage].hide();
 			this.getPages()[page].show();
 			this.currentPage = page;
@@ -143,6 +143,22 @@ define(["hbs!tpl/viewer", "streamloader", "jquery"], function(_viewer, streamloa
 		//end
 		if ([35].indexOf(e.which) != -1) {
 			this.gotoLastPage();
+		}
+
+		// numbers
+		if(48 <= e.which && e.which <= 57) {
+			var num = parseInt(String.fromCharCode(e.which));
+			if(this.keyInterval) {
+				clearInterval(this.keyInterval);
+				this._nextPage = parseInt(""+this._nextPage + num);
+			} else {
+				this._nextPage = num;
+			}
+			this.keyInterval = setTimeout($.proxy(function() {
+				var page = this._nextPage -1;
+				this._nextPage = 0;
+				this.gotoPage(page >= 0 ? page : 0);
+			}, this), 300);
 		}
 	}
 

@@ -24,7 +24,7 @@ requirejs.config({
 require(['jquery', 'app'], function($, app) {
 
 	var slides = new app.Slides();
-	slides.loadSlide("START.html").done(function() {
+	slides.loadSlide("GRÜNDEN.md").done(function() {
 
 	});
 
