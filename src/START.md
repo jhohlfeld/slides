@@ -1,4 +1,30 @@
-# Barcamp Leipzig 08/2013
+# SLIDES - simple javascript slide application
+
+Slides takes an html document and breaks it apart using html headline tags (`h1, h2, ...`) as demarcation.
+
+This behaviour is configurable - `h1` through to `h3` are the defaults.
+
+In fact, any tag may be used to slice the original document up!
+
+#### Usage
+
+You can use the following keys to navigate the document: 
+
+`up`, `down`, `left` `right` as well as `pgup` and `pgdown` to traverse page by page,
+
+`pos1` to return to the beginning, `end` to jump to the end
+
+and finally numbers `0..9` to jump directly to a certain page.
+
+## A test bed for a new technology stack
+
+Slides was created as a pet project, accompanying preparations for a one-day barcamp in Leipzig which took place earlier this year.
+
+It was used to test some really cool tech - beeing [karma][i0], [bower][i1], [markdown][i3] and [jasmine][i4].
+
+## What follows
+
+... are some of the contents, which we talked about at the barcamp.
 
 ## Tools & Methoden
 
@@ -58,3 +84,8 @@ _Possible issues_
 [10]: http://docs.mongodb.org/manual/core/document/
 [11]: http://www.tornadoweb.org/
 [12]: http://wiki.commonjs.org/wiki/Promises/A
+
+[i0]: http://karma-runner.github.io/0.10/index.html
+[i1]: http://bower.io/
+[i2]: http://markdown.de/syntax/
+[i3]: http://pivotal.github.io/jasmine/
